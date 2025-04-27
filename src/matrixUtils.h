@@ -11,5 +11,8 @@ typedef struct {
 Matrix* createMatrix(int rows, int columns);
 void freeMatrix(Matrix* matrix);
 void printMatrix(Matrix* matrix);
+Matrix* multiplyMatrix(Matrix* a, Matrix* b);
+Matrix* addMatrix(Matrix* a, Matrix* b);
+Matrix* scalarMultiplyMatrix(float scalar, Matrix* b);
 
 #endif

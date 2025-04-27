@@ -19,6 +19,7 @@ void freeMatrix(Matrix* matrix) {
     }
 }
 
+//Print the Matrix into the terminal
 void printMatrix(Matrix* matrix) {
     if (matrix == NULL) {
         printf("Matrix is NULL\n");
@@ -30,4 +31,8 @@ void printMatrix(Matrix* matrix) {
         }
         printf("\n");
     }
+}
+
+void multiplyMatrix(Matrix* a, Matrix* b) {
+    
 }
