@@ -33,14 +33,17 @@ void printMatrix(Matrix* matrix) {
     }
 }
 
+//Get the specified value from a matrix
 float getValue(Matrix* matrix, int row, int column) {
     return matrix->data[row * matrix->columns + column];
 }
 
+//Set the specifified value into a matrix
 void setValue(Matrix* matrix, int row, int column, float value) {
     matrix->data[row * matrix->columns + column] = value;
 }
 
+//Multiply 2 matrixes with each other
 Matrix* multiplyMatrix(Matrix* a, Matrix* b) {
     if (a->columns != b->rows) {
         printf("Size mismatch %d vs %d\n", a->columns, b->rows);
@@ -62,6 +65,7 @@ Matrix* multiplyMatrix(Matrix* a, Matrix* b) {
     return product;
 }
 
+//Add 2 matrixes together
 Matrix* addMatrix(Matrix* a, Matrix* b) {
     if (a->columns != b->columns || a->rows != b->rows) {
         printf("Size mismatch %dx%d vs %dx%d\n", a->columns, a->rows, b->columns, b->rows);
@@ -80,6 +84,7 @@ Matrix* addMatrix(Matrix* a, Matrix* b) {
     return sum;
 }
 
+//Multiply a matrix by a scalar
 Matrix* scalarMultiplyMatrix(float scalar, Matrix* a) {
     Matrix* scaled = createMatrix(a->rows, a->columns);
 
@@ -90,4 +95,17 @@ Matrix* scalarMultiplyMatrix(float scalar, Matrix* a) {
     }
 
     return scaled;
+}
+
+//Flips the rows and columns on a matrix
+Matrix* transposeMatrix(Matrix* matrix) {
+    Matrix* result = createMatrix(matrix->columns, matrix->rows);
+
+    for (int row = 0; row < matrix->rows; row++) {
+        for (int column = 0; column < matrix->columns; column++) {
+            result->data[column * result->columns + row] = matrix->data[row * matrix->columns + column];
+        }
+    }
+
+    return result;
 }

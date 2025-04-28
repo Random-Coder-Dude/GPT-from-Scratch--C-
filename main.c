@@ -1,30 +1,29 @@
 #include <stdio.h>
-#include "src/matrixUtils.h"  // Assuming you have createMatrix, setValue, printMatrix, etc.
+#include "src/transformer.h"
 
 int main() {
-    // 1. Create a 2x3 and a 3x4 matrix
-    Matrix* matrix1 = createMatrix(2, 3);
-    Matrix* matrix2 = createMatrix(2, 3);
+    // 1. Create a matrix (2x3)
+    Matrix* matrix = createMatrix(2, 3);
 
-    // 2. Set values for matrix1 (2x3)
-    setValue(matrix1, 0, 0, 1); setValue(matrix1, 0, 1, 2); setValue(matrix1, 0, 2, 3);
-    setValue(matrix1, 1, 0, 4); setValue(matrix1, 1, 1, 5); setValue(matrix1, 1, 2, 6);
+    // 2. Fill the matrix with some values
+    matrix->data[0] = 2.0f;
+    matrix->data[1] = 2.0f;
+    matrix->data[2] = 3.0f;
+    matrix->data[3] = 5.0f;
+    matrix->data[4] = 5.0f;
+    matrix->data[5] = 6.0f;
 
-    // Set values for matrix2 (3x4)
-    setValue(matrix2, 0, 0, 7);  setValue(matrix2, 0, 1, 8);  setValue(matrix2, 0, 2, 9);
-    setValue(matrix2, 1, 0, 11); setValue(matrix2, 1, 1, 12); setValue(matrix2, 1, 2, 13);
+    printf("Original matrix:\n");
+    printMatrix(matrix);
 
-    // 3. Multiply the matrices
-    Matrix* result = scalarMultiplyMatrix(2, matrix1);
+    // 3. Apply Layer Normalization row-wise
+    layerNormalization(matrix, 1e-5f);  // epsilon = 1e-5 to avoid division by zero
 
-    // 4. Print the result matrix
-    printf("Result of matrix1 + matrix2:\n");
-    printMatrix(result);
+    printf("\nAfter applying Layer Normalization:\n");
+    printMatrix(matrix);
 
-    // 5. Free memory
-    freeMatrix(matrix1);
-    freeMatrix(matrix2);
-    freeMatrix(result);
+    // 4. Free memory
+    freeMatrix(matrix);
 
     return 0;
 }

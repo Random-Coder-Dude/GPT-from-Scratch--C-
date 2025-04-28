@@ -1,11 +1,11 @@
 CC=gcc
 CFLAGS=-Wall
-TARGET=builds
+TARGET=builds/main
 
 all: $(TARGET)
 
 $(TARGET): main.c
-	$(CC) $(CFLAGS) -o $(TARGET) main.c src/matrixUtils.c
+	$(CC) $(CFLAGS) -o $(TARGET) main.c src/matrixUtils.c src/normalization.c
 
 clean:
 	rm -f $(TARGET)
