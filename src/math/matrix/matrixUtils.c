@@ -47,7 +47,7 @@ void setValue(Matrix* matrix, int row, int column, float value) {
 Matrix* multiplyMatrix(Matrix* a, Matrix* b) {
     if (a->columns != b->rows) {
         printf("Size mismatch %d vs %d\n", a->columns, b->rows);
-        return NULL;
+        exit(1);
     }
 
     Matrix* product = createMatrix(a->rows, b->columns);
@@ -69,7 +69,7 @@ Matrix* multiplyMatrix(Matrix* a, Matrix* b) {
 Matrix* addMatrix(Matrix* a, Matrix* b) {
     if (a->columns != b->columns || a->rows != b->rows) {
         printf("Size mismatch %dx%d vs %dx%d\n", a->columns, a->rows, b->columns, b->rows);
-        return NULL;
+        exit(1);
     }
     
     Matrix* sum = createMatrix(a->rows, a->columns);

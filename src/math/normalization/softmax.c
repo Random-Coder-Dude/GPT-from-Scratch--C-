@@ -1,5 +1,5 @@
 #include <math.h>
-#include "normalization.h"
+#include "softmax.h"
 #include "matrixUtils.h"
 
 //Softmax a certain row in a matrix (Helper Function)
@@ -33,25 +33,25 @@ void softmaxMatrix(Matrix* matrix) {
 //Normalize a matrix (Layer Normalization)
 void layerNormalization(Matrix* matrix, float epsilon) {
     for (int m_rows = 0; m_rows < matrix->rows; m_rows++) {
-        int m_columns = matrix->columns;
+        int columns = matrix->columns;
         float sum = 0.0f;
 
-        for (int m_cols = 0; m_cols < m_columns; m_cols++) {
-            sum += matrix->data[m_rows * m_columns + m_cols];
+        for (int m_columns = 0; m_columns < columns; m_columns++) {
+            sum += matrix->data[m_rows * columns + m_columns];
         }
 
-        float mean = sum / m_columns;
+        float mean = sum / columns;
         float variance = 0.0f;
 
-        for (int m_cols = 0; m_cols < m_columns; m_cols++) {
-            float diff = matrix->data[m_rows * m_columns + m_cols] - mean;
+        for (int m_columns = 0; m_columns < columns; m_columns++) {
+            float diff = matrix->data[m_rows * columns + m_columns] - mean;
             variance += diff * diff;
         }
 
-        variance /= m_columns;
+        variance /= columns;
 
-        for (int m_cols = 0; m_cols < m_columns; m_cols++) {
-            matrix->data[m_rows * m_columns + m_cols] = (matrix->data[m_rows * m_columns + m_cols] - mean) / sqrtf(variance + epsilon);
+        for (int m_columns = 0; m_columns < columns; m_columns++) {
+            matrix->data[m_rows * columns + m_columns] = (matrix->data[m_rows * columns + m_columns] - mean) / sqrtf(variance + epsilon);
         }
     }
 }

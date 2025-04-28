@@ -1,29 +1,36 @@
 #include <stdio.h>
-#include "src/transformer.h"
+#include <stdlib.h>
+#include <time.h>
+#include "src/imports.h"
 
 int main() {
-    // 1. Create a matrix (2x3)
-    Matrix* matrix = createMatrix(2, 3);
+    // Initialize random seed
+    srand((unsigned int)time(NULL));
 
-    // 2. Fill the matrix with some values
-    matrix->data[0] = 2.0f;
-    matrix->data[1] = 2.0f;
-    matrix->data[2] = 3.0f;
-    matrix->data[3] = 5.0f;
-    matrix->data[4] = 5.0f;
-    matrix->data[5] = 6.0f;
+    // 1. Create input matrix (input_dim = 8, batch_size = 2)
+    Matrix* input = createMatrix(8, 2);  // 8 features, 2 examples
 
-    printf("Original matrix:\n");
-    printMatrix(matrix);
+    // Fill input with sequential values or random numbers
+    for (int i = 0; i < input->rows * input->columns; i++) {
+        input->data[i] = (float)(i + 1);
+    }
 
-    // 3. Apply Layer Normalization row-wise
-    layerNormalization(matrix, 1e-5f);  // epsilon = 1e-5 to avoid division by zero
+    printf("Input Matrix:\n");
+    printMatrix(input);
 
-    printf("\nAfter applying Layer Normalization:\n");
-    printMatrix(matrix);
+    // 2. Create a Multi-Head Attention block (input_dim = 8, num_heads = 2)
+    MultiHeadAttention* mha = createMultiHeadAttention(8, 2);  // 2 heads
+
+    // 3. Forward pass
+    Matrix* output = multiHeadAttentionForward(mha, input);
+
+    printf("\nOutput after Multi-Head Attention:\n");
+    printMatrix(output);
 
     // 4. Free memory
-    freeMatrix(matrix);
+    freeMatrix(input);
+    freeMatrix(output);
+    freeMultiHeadAttention(mha);
 
     return 0;
 }
