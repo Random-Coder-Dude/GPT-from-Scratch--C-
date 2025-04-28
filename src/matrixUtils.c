@@ -25,14 +25,69 @@ void printMatrix(Matrix* matrix) {
         printf("Matrix is NULL\n");
         return;
     }
-    for (int i = 0; i < matrix->rows; i++) {
-        for (int j = 0; j < matrix->columns; j++) {
-            printf("%8.3f ", matrix->data[i * matrix->columns + j]);
+    for (int row = 0; row < matrix->rows; row++) {
+        for (int column = 0; column < matrix->columns; column++) {
+            printf("%8.3f ", matrix->data[row * matrix->columns + column]);
         }
         printf("\n");
     }
 }
 
-void multiplyMatrix(Matrix* a, Matrix* b) {
+float getValue(Matrix* matrix, int row, int column) {
+    return matrix->data[row * matrix->columns + column];
+}
+
+void setValue(Matrix* matrix, int row, int column, float value) {
+    matrix->data[row * matrix->columns + column] = value;
+}
+
+Matrix* multiplyMatrix(Matrix* a, Matrix* b) {
+    if (a->columns != b->rows) {
+        printf("Size mismatch %d vs %d\n", a->columns, b->rows);
+        return NULL;
+    }
+
+    Matrix* product = createMatrix(a->rows, b->columns);
+
+    for (int rowA = 0; rowA < a->rows; rowA++) {
+        for (int columnB = 0; columnB < b->columns; columnB++) {
+            float sum = 0.0f;
+            for (int columnA = 0; columnA < a->columns; columnA++) {
+                sum += getValue(a, rowA, columnA) * getValue(b, columnA, columnB);
+            }
+            setValue(product, rowA, columnB, sum);
+        }
+    }
+
+    return product;
+}
+
+Matrix* addMatrix(Matrix* a, Matrix* b) {
+    if (a->columns != b->columns || a->rows != b->rows) {
+        printf("Size mismatch %dx%d vs %dx%d\n", a->columns, a->rows, b->columns, b->rows);
+        return NULL;
+    }
     
+    Matrix* sum = createMatrix(a->rows, a->columns);
+
+    for (int row = 0; row < a->rows; row++) {
+        for (int column = 0; column < a->columns; column++) {
+            float value = getValue(a, row, column) + getValue(b, row, column);
+            setValue(sum, row, column, value);
+        }
+    }
+
+    return sum;
+}
+
+Matrix* scalarMultiplyMatrix(float scalar, Matrix* a) {
+    Matrix* scaled = createMatrix(a->rows, a->columns);
+
+    for (int row = 0; row < a->rows; row++) {
+        for (int column = 0; column < a->columns; column++) {
+            setValue(scaled, row, column, scalar * getValue(a, row, column));
+        }
+    }
+
+    return scaled;
 }

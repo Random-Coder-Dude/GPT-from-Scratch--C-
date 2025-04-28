@@ -1,24 +1,30 @@
 #include <stdio.h>
-#include "src/matrixUtils.h"
+#include "src/matrixUtils.h"  // Assuming you have createMatrix, setValue, printMatrix, etc.
 
 int main() {
-    // 1. Create a 2x3 matrix
-    Matrix* mat = createMatrix(2, 3);
+    // 1. Create a 2x3 and a 3x4 matrix
+    Matrix* matrix1 = createMatrix(2, 3);
+    Matrix* matrix2 = createMatrix(2, 3);
 
-    // 2. Set values manually
-    mat->data[0] = 1.1f;  // Row 0, Col 0
-    mat->data[1] = 2.2f;  // Row 0, Col 1
-    mat->data[2] = 3.3f;  // Row 0, Col 2
-    mat->data[3] = 4.4f;  // Row 1, Col 0
-    mat->data[4] = 5.5f;  // Row 1, Col 1
-    mat->data[5] = 6.6f;  // Row 1, Col 2
+    // 2. Set values for matrix1 (2x3)
+    setValue(matrix1, 0, 0, 1); setValue(matrix1, 0, 1, 2); setValue(matrix1, 0, 2, 3);
+    setValue(matrix1, 1, 0, 4); setValue(matrix1, 1, 1, 5); setValue(matrix1, 1, 2, 6);
 
-    // 3. Print the matrix
-    printf("Matrix contents:\n");
-    printMatrix(mat);
+    // Set values for matrix2 (3x4)
+    setValue(matrix2, 0, 0, 7);  setValue(matrix2, 0, 1, 8);  setValue(matrix2, 0, 2, 9);
+    setValue(matrix2, 1, 0, 11); setValue(matrix2, 1, 1, 12); setValue(matrix2, 1, 2, 13);
 
-    // 4. Free the matrix
-    freeMatrix(mat);
+    // 3. Multiply the matrices
+    Matrix* result = scalarMultiplyMatrix(2, matrix1);
+
+    // 4. Print the result matrix
+    printf("Result of matrix1 + matrix2:\n");
+    printMatrix(result);
+
+    // 5. Free memory
+    freeMatrix(matrix1);
+    freeMatrix(matrix2);
+    freeMatrix(result);
 
     return 0;
 }
