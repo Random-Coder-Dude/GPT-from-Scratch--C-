@@ -7,6 +7,7 @@ INCLUDES    = -I./src/math/matrix \
              -I./src/blocks/linearLayer \
              -I./src/blocks/feedforward \
              -I./src/blocks/transformer \
+             -I./src/blocks/tokenizer
 
 # Directories
 SRC_DIR     = src
@@ -24,7 +25,8 @@ FILES       = main.c \
              $(SRC_DIR)/blocks/linearLayer/linearLayer.c \
              $(SRC_DIR)/math/normalization/normalization.c \
              $(SRC_DIR)/blocks/feedforward/ffn.c \
-             $(SRC_DIR)/blocks/transformer/transformerBlock.c
+             $(SRC_DIR)/blocks/transformer/transformerBlock.c \
+             $(SRC_DIR)/blocks/tokenizer/tokenizer.c
 
 # Default target: build and run the program
 run: $(TARGET)

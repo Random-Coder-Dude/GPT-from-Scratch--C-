@@ -1,30 +1,25 @@
+// demo.c
+
 #include <stdio.h>
 #include "src/imports.h"
 
 int main() {
-    int input_dim = 8;
-    int batch_size = 2;
-    int hidden_dim = 16;
-    int num_heads = 2;
+    // Sample text to tokenize
+    const char* text = "hello world from tokenizer demo";
 
-    Matrix* input = createMatrix(input_dim, batch_size);
-    for (int i = 0; i < input->rows * input->columns; i++) {
-        input->data[i] = (float)(i + 1);
+    // Array to hold the token IDs
+    int token_ids[MAX_TOKENS];
+
+    // Tokenize the input text
+    int num_tokens = tokenize(text, token_ids);
+
+    // Print the results
+    printf("Original text: \"%s\"\n", text);
+    printf("Tokenized IDs:\n");
+
+    for (int i = 0; i < num_tokens; i++) {
+        printf("Token %d ID: %d\n", i + 1, token_ids[i]);
     }
 
-    TransformerBlock* block = createTransformerBlock(input_dim, num_heads, hidden_dim);
-
-    printf("Input:\n");
-    printMatrix(input);
-
-    Matrix* output = transformerForward(block, input);
-
-    printf("\nOutput after Transformer Block:\n");
-    printMatrix(output);
-
-    freeMatrix(input);
-    freeMatrix(output);
-    freeTransformerBlock(block);
-    
     return 0;
 }
