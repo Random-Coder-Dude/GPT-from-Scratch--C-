@@ -1,44 +1,30 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
 #include "src/imports.h"
 
 int main() {
-    // Start the clock before the loop
-    clock_t start_time = clock();
+    int input_dim = 8;
+    int batch_size = 2;
+    int hidden_dim = 16;
+    int num_heads = 2;
 
-    for (int i = 0; i < 1000; i++) {
-
-        // Initialize random seed
-        srand((unsigned int)time(NULL));
-
-        // 1. Create input matrix (input_dim = 8, batch_size = 2)
-        Matrix* input = createMatrix(8, 2);  // 8 features, 2 examples
-
-        // Fill input with sequential values or random numbers
-        for (int i = 0; i < input->rows * input->columns; i++) {
-            input->data[i] = (float)(i + 1);
-        }
-
-        // 2. Create a Multi-Head Attention block (input_dim = 8, num_heads = 2)
-        MultiHeadAttention* mha = createMultiHeadAttention(8, 2);  // 2 heads
-
-        // 3. Forward pass (Apply multi-head attention)
-        Matrix* output = multiHeadAttentionForward(mha, input);
-
-        // 4. Free memory
-        freeMatrix(input);
-        freeMatrix(output);
-        freeMultiHeadAttention(mha);
+    Matrix* input = createMatrix(input_dim, batch_size);
+    for (int i = 0; i < input->rows * input->columns; i++) {
+        input->data[i] = (float)(i + 1);
     }
 
-    // Stop the clock after the loop
-    clock_t end_time = clock();
+    TransformerBlock* block = createTransformerBlock(input_dim, num_heads, hidden_dim);
 
-    // Calculate the elapsed time
-    double time_taken = (double)(end_time - start_time) / CLOCKS_PER_SEC;
+    printf("Input:\n");
+    printMatrix(input);
 
-    printf("\nTotal time for 1000 iterations: %f seconds\n", time_taken);
+    Matrix* output = transformerForward(block, input);
 
+    printf("\nOutput after Transformer Block:\n");
+    printMatrix(output);
+
+    freeMatrix(input);
+    freeMatrix(output);
+    freeTransformerBlock(block);
+    
     return 0;
 }

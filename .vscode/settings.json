@@ -5,7 +5,8 @@
         "softmax.h": "c",
         "attentionhead.h": "c",
         "normalization.h": "c",
-        "linearlayer.h": "c"
+        "linearlayer.h": "c",
+        "ffn.h": "c"
     },
     "makefile.configureOnOpen": true,
     "C_Cpp.default.compilerPath": "C:/msys64/mingw64/bin/gcc.exe"

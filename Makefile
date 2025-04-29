@@ -4,7 +4,9 @@ CFLAGS      = -Wall -lm
 INCLUDES    = -I./src/math/matrix \
              -I./src/math/normalization \
              -I./src/blocks/attention \
-             -I./src/blocks/linearLayer
+             -I./src/blocks/linearLayer \
+             -I./src/blocks/feedforward \
+             -I./src/blocks/transformer \
 
 # Directories
 SRC_DIR     = src
@@ -19,7 +21,10 @@ FILES       = main.c \
              $(SRC_DIR)/math/normalization/softmax.c \
              $(SRC_DIR)/blocks/attention/attentionhead.c \
              $(SRC_DIR)/blocks/attention/multiHeadAttention.c \
-             $(SRC_DIR)/blocks/linearLayer/linearLayer.c
+             $(SRC_DIR)/blocks/linearLayer/linearLayer.c \
+             $(SRC_DIR)/math/normalization/normalization.c \
+             $(SRC_DIR)/blocks/feedforward/ffn.c \
+             $(SRC_DIR)/blocks/transformer/transformerBlock.c
 
 # Default target: build and run the program
 run: $(TARGET)
