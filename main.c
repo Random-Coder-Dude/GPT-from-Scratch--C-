@@ -1,25 +1,40 @@
-// demo.c
-
-#include <stdio.h>
 #include "src/imports.h"
 
 int main() {
-    // Sample text to tokenize
-    const char* text = "hello world from tokenizer demo";
+    srand((unsigned int)time(NULL));
 
-    // Array to hold the token IDs
-    int token_ids[MAX_TOKENS];
+    // Input text
+    const char* text = "Hello TESTING!!!!";
+    int token_ids[32];  // Output buffer
 
-    // Tokenize the input text
-    int num_tokens = tokenize(text, token_ids);
+    // Tokenize
+    int seq_len = tokenize(text, token_ids);
+    printf("Token IDs (%d tokens): ", seq_len);
+    for (int i = 0; i < seq_len; i++) {
+        printf("%d ", token_ids[i]);
+    }
+    printf("\n");
 
-    // Print the results
-    printf("Original text: \"%s\"\n", text);
-    printf("Tokenized IDs:\n");
+    // Embedding
+    int vocab_size = 100;     // dummy limit
+    int embedding_dim = 8;
+    Embedding* emb = createEmbedding(vocab_size, embedding_dim);
+    Matrix* embedded = embedTokens(emb, token_ids, seq_len);
 
-    for (int i = 0; i < num_tokens; i++) {
-        printf("Token %d ID: %d\n", i + 1, token_ids[i]);
+    // Positional encoding
+    Matrix* pos = createPositionalEncoding(seq_len, embedding_dim);
+
+    // Add embeddings + position encoding
+    for (int i = 0; i < embedded->rows * embedded->columns; i++) {
+        embedded->data[i] += pos->data[i];
     }
 
+    printf("Embedded + Positional:\n");
+    printMatrix(embedded);
+
+    // Cleanup
+    freeMatrix(pos);
+    freeMatrix(embedded);
+    freeEmbedding(emb);
     return 0;
 }
