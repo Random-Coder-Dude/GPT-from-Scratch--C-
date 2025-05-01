@@ -29,6 +29,7 @@ Matrix* linearForward(LinearLayer* layer, Matrix* input) {
             output->data[i * output->columns + j] += layer->bias->data[j];
         }
     }
+
     return output;
 }
 

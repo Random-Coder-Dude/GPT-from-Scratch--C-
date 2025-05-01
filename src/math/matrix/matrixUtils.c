@@ -22,8 +22,7 @@ void freeMatrix(Matrix* matrix) {
 //Print the Matrix into the terminal
 void printMatrix(Matrix* matrix) {
     if (matrix == NULL) {
-        printf("Matrix is NULL\n");
-        return;
+        exit(1);
     }
     for (int row = 0; row < matrix->rows; row++) {
         for (int column = 0; column < matrix->columns; column++) {
@@ -46,7 +45,6 @@ void setValue(Matrix* matrix, int row, int column, float value) {
 //Multiply 2 matrixes with each other
 Matrix* multiplyMatrix(Matrix* a, Matrix* b) {
     if (a->columns != b->rows) {
-        printf("Size mismatch %d vs %d\n", a->columns, b->rows);
         exit(1);
     }
 
@@ -68,7 +66,6 @@ Matrix* multiplyMatrix(Matrix* a, Matrix* b) {
 //Add 2 matrixes together
 Matrix* addMatrix(Matrix* a, Matrix* b) {
     if (a->columns != b->columns || a->rows != b->rows) {
-        printf("Size mismatch %dx%d vs %dx%d\n", a->columns, a->rows, b->columns, b->rows);
         exit(1);
     }
     
@@ -108,4 +105,20 @@ Matrix* transposeMatrix(Matrix* matrix) {
     }
 
     return result;
+}
+
+int argmaxRow(Matrix* logits, int row_index) {
+    int vocab_size = logits->columns;
+    float max_val = logits->data[row_index * vocab_size];
+    int max_index = 0;
+
+    for (int i = 1; i < vocab_size; i++) {
+        float val = logits->data[row_index * vocab_size + i];
+        if (val > max_val) {
+            max_val = val;
+            max_index = i;
+        }
+    }
+
+    return max_index;
 }

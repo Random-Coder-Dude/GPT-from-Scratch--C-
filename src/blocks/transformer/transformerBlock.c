@@ -6,7 +6,6 @@
 
 Matrix* residualAdd(Matrix* a, Matrix* b) {
     if (a->rows != b->rows || a->columns != b->columns) {
-        printf("Residual size mismatch!\n");
         exit(1);
     }
 
@@ -38,6 +37,7 @@ Matrix* transformerForward(TransformerBlock* block, Matrix* input) {
 
     // 4. Residual + LayerNorm again
     Matrix* final = residualAdd(ffn_output, mha_residual);
+
     freeMatrix(ffn_output);
     freeMatrix(mha_residual);
     layerNormalization(final, 1e-5f);

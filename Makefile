@@ -28,7 +28,8 @@ FILES       = main.c \
              $(SRC_DIR)/blocks/transformer/transformerBlock.c \
              $(SRC_DIR)/blocks/tokenizer/tokenizer.c \
              $(SRC_DIR)/blocks/layers/embedding.c \
-             $(SRC_DIR)/blocks/tokenizer/positionalEncoding.c
+             $(SRC_DIR)/blocks/tokenizer/positionalEncoding.c \
+             $(SRC_DIR)/blocks/layers/outputProjection.c
 
 # Default target: build and run the program
 run: $(TARGET)

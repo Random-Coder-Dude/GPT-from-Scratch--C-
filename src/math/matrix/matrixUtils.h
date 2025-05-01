@@ -17,5 +17,6 @@ Matrix* multiplyMatrix(Matrix* a, Matrix* b);
 Matrix* addMatrix(Matrix* a, Matrix* b);
 Matrix* scalarMultiplyMatrix(float scalar, Matrix* a);
 Matrix* transposeMatrix(Matrix* matrix);
+int argmaxRow(Matrix* logits, int row_index);
 
 #endif

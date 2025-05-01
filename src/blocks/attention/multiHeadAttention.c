@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include "multiHeadAttention.h"
 #include "attentionHead.h"
@@ -24,14 +25,17 @@ MultiHeadAttention* createMultiHeadAttention(int input_dim, int num_heads) {
 }
 
 Matrix* multiHeadAttentionForward(MultiHeadAttention* mha, Matrix* input) {
+
     int batch_size = input->columns; // Input shape: (input_dim, batch_size)
 
     Matrix** heads = (Matrix**)malloc(mha->num_heads * sizeof(Matrix*));
 
     for (int i = 0; i < mha->num_heads; i++) {
-        Matrix* Q = multiplyMatrix(mha->Wq[i]->weights, input); // (head_dim, batch_size)
-        Matrix* K = multiplyMatrix(mha->Wk[i]->weights, input);
-        Matrix* V = multiplyMatrix(mha->Wv[i]->weights, input);
+        Matrix* input_T = transposeMatrix(input);
+
+        Matrix* Q = multiplyMatrix(mha->Wq[i]->weights, input_T); // (head_dim, batch_size)
+        Matrix* K = multiplyMatrix(mha->Wk[i]->weights, input_T);
+        Matrix* V = multiplyMatrix(mha->Wv[i]->weights, input_T);
 
         // Transpose to (batch_size, head_dim)
         Matrix* Q_T = transposeMatrix(Q);
@@ -50,7 +54,7 @@ Matrix* multiHeadAttentionForward(MultiHeadAttention* mha, Matrix* input) {
     }
 
     // Concatenate heads horizontally
-    int concat_cols = mha->head_dim * mha->num_heads;
+    int concat_cols = heads[0]->columns * mha->num_heads;
     Matrix* concat = createMatrix(batch_size, concat_cols); // (batch_size, total_head_dim)
 
     for (int i = 0; i < mha->num_heads; i++) {
@@ -76,7 +80,10 @@ Matrix* multiHeadAttentionForward(MultiHeadAttention* mha, Matrix* input) {
         }
     }
 
-    return output;
+    Matrix* output_T = transposeMatrix(output);  // (seq_len × head_dim)
+    freeMatrix(output);
+
+    return output_T;
 }
 
 void freeMultiHeadAttention(MultiHeadAttention* mha) {

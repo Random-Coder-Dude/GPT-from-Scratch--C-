@@ -15,5 +15,6 @@
 #include "blocks/tokenizer/tokenizer.h"
 #include "blocks/Layers/embedding.h"
 #include "blocks/tokenizer/positionalEncoding.h"
+#include "blocks/Layers/outputProjection.h"
 
 #endif

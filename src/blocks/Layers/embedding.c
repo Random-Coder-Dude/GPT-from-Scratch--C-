@@ -23,7 +23,6 @@ Matrix* embedTokens(Embedding* embedding, int* token_ids, int length) {
     for (int i = 0; i < length; i++) {
         int token_id = token_ids[i];
         if (token_id < 0 || token_id >= embedding->vocab_size) {
-            printf("Invalid token id: %d\n", token_id);
             exit(1);
         }
 
