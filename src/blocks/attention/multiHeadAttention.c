@@ -25,66 +25,73 @@ MultiHeadAttention* createMultiHeadAttention(int input_dim, int num_heads) {
 }
 
 Matrix* multiHeadAttentionForward(MultiHeadAttention* mha, Matrix* input) {
+    int seq_len = input->columns;       // input: [input_dim][seq_len]
+    int head_dim = mha->head_dim;
+    int num_heads = mha->num_heads;
+    int input_dim = mha->input_dim;
 
-    int batch_size = input->columns; // Input shape: (input_dim, batch_size)
+    // Allocate space for attention heads
+    Matrix** heads = (Matrix**)malloc(num_heads * sizeof(Matrix*));
 
-    Matrix** heads = (Matrix**)malloc(mha->num_heads * sizeof(Matrix*));
+    // Compute Q, K, V and attention for each head
+    for (int i = 0; i < num_heads; i++) {
+        Matrix* Q = multiplyMatrix(mha->Wq[i]->weights, input);  // [head_dim][seq_len]
+        Matrix* K = multiplyMatrix(mha->Wk[i]->weights, input);  // [head_dim][seq_len]
+        Matrix* V = multiplyMatrix(mha->Wv[i]->weights, input);  // [head_dim][seq_len]
 
-    for (int i = 0; i < mha->num_heads; i++) {
-        Matrix* input_T = transposeMatrix(input);
+        heads[i] = attentionHead(Q, K, V);  // Output: [head_dim][seq_len]
 
-        Matrix* Q = multiplyMatrix(mha->Wq[i]->weights, input_T); // (head_dim, batch_size)
-        Matrix* K = multiplyMatrix(mha->Wk[i]->weights, input_T);
-        Matrix* V = multiplyMatrix(mha->Wv[i]->weights, input_T);
-
-        // Transpose to (batch_size, head_dim)
-        Matrix* Q_T = transposeMatrix(Q);
-        Matrix* K_T = transposeMatrix(K);
-        Matrix* V_T = transposeMatrix(V);
-
-        heads[i] = attentionHead(Q_T, K_T, V_T); // Output: (batch_size, head_dim)
-
-        // Free intermediates
         freeMatrix(Q);
         freeMatrix(K);
         freeMatrix(V);
-        freeMatrix(Q_T);
-        freeMatrix(K_T);
-        freeMatrix(V_T);
     }
 
-    // Concatenate heads horizontally
-    int concat_cols = heads[0]->columns * mha->num_heads;
-    Matrix* concat = createMatrix(batch_size, concat_cols); // (batch_size, total_head_dim)
+    // Concatenate heads into a single matrix: [input_dim][seq_len]
+    Matrix* concat = createMatrix(input_dim, seq_len);  // [24][seq_len] if dim=24
 
-    for (int i = 0; i < mha->num_heads; i++) {
-        for (int r = 0; r < heads[i]->rows; r++) {
-            for (int c = 0; c < heads[i]->columns; c++) {
-                concat->data[r * concat->columns + (i * mha->head_dim + c)] = heads[i]->data[r * heads[i]->columns + c];
+    for (int head_idx = 0; head_idx < num_heads; head_idx++) {
+        Matrix* attention_head = heads[head_idx];  // [head_dim][seq_len]
+
+        if (!attention_head) {
+            printf("Error: attention_head[%d] is NULL!\n", head_idx);
+            exit(1);
+        }
+
+        for (int token_idx = 0; token_idx < seq_len; token_idx++) { // columns
+            for (int dim_idx = 0; dim_idx < head_dim; dim_idx++) {  // rows
+                int out_row = head_idx * head_dim + dim_idx;
+                int out_col = token_idx;
+
+                if (out_row >= concat->rows || out_col >= concat->columns) {
+                    printf("Index out of bounds: out_row=%d, out_col=%d\n", out_row, out_col);
+                    exit(1);
+                }
+
+                // column-major: data[col * rows + row]
+                concat->data[out_col * concat->rows + out_row] =
+                    attention_head->data[token_idx * attention_head->rows + dim_idx];
             }
         }
-        freeMatrix(heads[i]);
-    }
-    free(heads);
 
-    // Project output back to input_dim
-    Matrix* concat_T = transposeMatrix(concat); // (concat_dim, batch_size)
-    Matrix* output = multiplyMatrix(mha->Wo->weights, concat_T); // (input_dim, batch_size)
-    freeMatrix(concat_T);
-    freeMatrix(concat);
+        freeMatrix(attention_head);
+    }
+
+    // Project back to input_dim using output projection: Wo * concat
+    Matrix* output = multiplyMatrix(mha->Wo->weights, concat);  // [input_dim][seq_len]
 
     // Add bias
     for (int i = 0; i < output->rows; i++) {
         for (int j = 0; j < output->columns; j++) {
-            output->data[i * output->columns + j] += mha->Wo->bias->data[i];
+            output->data[j * output->rows + i] += mha->Wo->bias->data[i];
         }
     }
 
-    Matrix* output_T = transposeMatrix(output);  // (seq_len × head_dim)
-    freeMatrix(output);
+    freeMatrix(concat);
+    free(heads);
 
-    return output_T;
+    return output;  // [input_dim][seq_len]
 }
+
 
 void freeMultiHeadAttention(MultiHeadAttention* mha) {
     for (int i = 0; i < mha->num_heads; i++) {

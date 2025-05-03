@@ -16,19 +16,22 @@ Embedding* createEmbedding(int vocab_size, int embedding_dim) {
     return emb;
 }
 
-// Returns a (length × embedding_dim) matrix
+// Returns a (embedding_dim × length) matrix in column-major order
 Matrix* embedTokens(Embedding* embedding, int* token_ids, int length) {
-    Matrix* result = createMatrix(length, embedding->embedding_dim);
+    Matrix* result = createMatrix(embedding->embedding_dim, length);  // rows = embedding_dim, cols = length
 
     for (int i = 0; i < length; i++) {
         int token_id = token_ids[i];
+
         if (token_id < 0 || token_id >= embedding->vocab_size) {
+            printf("Error: Token ID out of bounds\n");
             exit(1);
         }
 
         for (int j = 0; j < embedding->embedding_dim; j++) {
-            result->data[i * embedding->embedding_dim + j] =
-                embedding->table->data[token_id * embedding->embedding_dim + j];
+            // Column-major access: result[j][i]
+            result->data[i * embedding->embedding_dim + j] =  // or j * length + i depending on layout
+                embedding->table->data[j * embedding->vocab_size + token_id];
         }
     }
 

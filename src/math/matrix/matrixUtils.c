@@ -22,6 +22,7 @@ void freeMatrix(Matrix* matrix) {
 //Print the Matrix into the terminal
 void printMatrix(Matrix* matrix) {
     if (matrix == NULL) {
+        printf("matrix doesn't exist\n");
         exit(1);
     }
     for (int row = 0; row < matrix->rows; row++) {
@@ -45,6 +46,7 @@ void setValue(Matrix* matrix, int row, int column, float value) {
 //Multiply 2 matrixes with each other
 Matrix* multiplyMatrix(Matrix* a, Matrix* b) {
     if (a->columns != b->rows) {
+        printf("Size Mismatch: %dx%d\n", a->columns, b->rows);
         exit(1);
     }
 
@@ -66,6 +68,7 @@ Matrix* multiplyMatrix(Matrix* a, Matrix* b) {
 //Add 2 matrixes together
 Matrix* addMatrix(Matrix* a, Matrix* b) {
     if (a->columns != b->columns || a->rows != b->rows) {
+        printf("mismatch matrix dimesnions (ADD MATRIX): %dvs%d, %dvs%d\n", a->rows, b->rows, a->columns, b->columns);
         exit(1);
     }
     

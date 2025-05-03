@@ -6,6 +6,7 @@
 
 Matrix* residualAdd(Matrix* a, Matrix* b) {
     if (a->rows != b->rows || a->columns != b->columns) {
+        printf("mismatch matrix dimesnions (RESIDUAL ADD): %dvs%d, %dvs%d\n", a->rows, b->rows, a->columns, b->columns);
         exit(1);
     }
 
@@ -24,6 +25,9 @@ TransformerBlock* createTransformerBlock(int input_dim, int num_heads, int hidde
 }
 
 Matrix* transformerForward(TransformerBlock* block, Matrix* input) {
+
+    layerNormalization(input, 1e-5);
+
     // 1. Multi-Head Attention
     Matrix* attn_output = multiHeadAttentionForward(block->mha, input);
 

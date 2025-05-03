@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include "ffn.h"
 #include "matrixUtils.h"
@@ -18,8 +19,8 @@ FeedForward* createFeedForward(int input_dim, int hidden_dim) {
 }
 
 Matrix* feedForwardForward(FeedForward* ffn, Matrix* input) {
-    // Layer 1
-    Matrix* h1 = multiplyMatrix(ffn->fc1->weights, input); // (hidden_dim × batch_size)
+    // Layer 1: Linear transformation + ReLU activation
+    Matrix* h1 = multiplyMatrix(ffn->fc1->weights, input);  // (hidden_dim × batch_size)
 
     // Add bias
     for (int i = 0; i < h1->rows; i++) {
@@ -30,11 +31,12 @@ Matrix* feedForwardForward(FeedForward* ffn, Matrix* input) {
 
     Matrix* h1_T = transposeMatrix(h1); // (batch_size × hidden_dim)
     freeMatrix(h1);
-    reluInPlace(h1_T); // In-place ReLU
+    reluInPlace(h1_T); // In-place ReLU (note h1_T will now have shape (batch_size × hidden_dim))
 
-    // Layer 2
-    Matrix* h2 = multiplyMatrix(ffn->fc2->weights, transposeMatrix(h1_T)); // (input_dim × batch_size)
-    freeMatrix(h1_T);
+    // Layer 2: Linear transformation
+    Matrix* h1_T_T = transposeMatrix(h1_T);  // Transpose back to (hidden_dim × batch_size)
+    Matrix* h2 = multiplyMatrix(ffn->fc2->weights, h1_T_T);  // (input_dim × batch_size)
+    freeMatrix(h1_T_T); // Free the transposed matrix
 
     // Add bias
     for (int i = 0; i < h2->rows; i++) {
@@ -43,7 +45,7 @@ Matrix* feedForwardForward(FeedForward* ffn, Matrix* input) {
         }
     }
 
-    return h2; // output shape: (input_dim × batch_size)
+    return h2; // Output shape: (input_dim × batch_size)
 }
 
 void freeFeedForward(FeedForward* ffn) {

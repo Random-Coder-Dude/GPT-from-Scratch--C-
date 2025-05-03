@@ -1,21 +1,28 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "tokenizer.h"
+#include <ctype.h>
 
-// Function to tokenize input text and convert it to token IDs
 int tokenize(const char *text, int *token_ids) {
-    const char *delim = " ";  // Tokenize based on spaces
-    char *text_copy = strdup(text);  // Make a copy of the input string to split
-    char *token = strtok(text_copy, delim);
     int index = 0;
+    const char *ptr = text;
+    
+    while (*ptr != '\0') {
+        // Skip leading spaces
+        while (isspace(*ptr)) ptr++;
 
-    // Split the string into tokens and assign each token a unique ID (here, length of token)
-    while (token != NULL) {
-        token_ids[index++] = strlen(token);  // In a real case, use a vocabulary for mapping
-        token = strtok(NULL, delim);
+        if (*ptr == '\0') break;  // End of string
+
+        const char *start = ptr;
+        
+        // Move ptr to the end of the current word
+        while (*ptr != '\0' && !isspace(*ptr)) ptr++;
+
+        int len = ptr - start;
+        if (len > 0) {
+            token_ids[index++] = len;  // Token ID = length of token
+        }
     }
 
-    free(text_copy);  // Free the copied string
-    return index;  // Return the number of tokens
+    return index;  // Return number of tokens
 }
