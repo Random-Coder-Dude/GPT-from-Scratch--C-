@@ -1,6 +1,6 @@
 # Compiler and flags
 CC        = gcc
-CFLAGS    = -Wall
+CFLAGS    = -Wall -fopenmp
 LDFLAGS   = -lm
 INCLUDES  = -I./src/math/matrix \
             -I./src/math/normalization \
@@ -27,12 +27,13 @@ FILES     = main.c \
             $(SRC_DIR)/blocks/tokenizer/tokenizer.c \
             $(SRC_DIR)/blocks/Layers/embedding.c \
             $(SRC_DIR)/blocks/tokenizer/positionalEncoding.c \
-            $(SRC_DIR)/blocks/Layers/outputProjection.c
+            $(SRC_DIR)/blocks/Layers/outputProjection.c \
+            $(SRC_DIR)/GPT.c
 
 .PHONY: run clean
 
 run: $(TARGET)
-	-./$(TARGET) || true
+	./$(TARGET)
 
 $(TARGET): $(FILES)
 	@mkdir -p $(BUILD_DIR)

@@ -1,13 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 #include "ffn.h"
 #include "matrixUtils.h"
 
 static void reluInPlace(Matrix* matrix) {
     for (int i = 0; i < matrix->rows * matrix->columns; i++) {
-        if (matrix->data[i] < 0.0f) {
-            matrix->data[i] = 0.0f;
-        }
+        matrix->data[i] = log(1.0f + exp(matrix->data[i]));
     }
 }
 
