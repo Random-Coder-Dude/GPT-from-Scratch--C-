@@ -5,8 +5,8 @@ LDFLAGS   = -lm
 INCLUDES  = -I./src/math/matrix \
             -I./src/math/normalization \
             -I./src/blocks/attention \
-            -I./src/blocks/layers \
-            -I./src/blocks/feedforward \
+            -I./src/blocks/Layers \
+            -I./src/blocks/feedForward \
             -I./src/blocks/transformer \
             -I./src/blocks/tokenizer
 
@@ -20,14 +20,14 @@ FILES     = main.c \
             $(SRC_DIR)/math/normalization/softmax.c \
             $(SRC_DIR)/blocks/attention/attentionhead.c \
             $(SRC_DIR)/blocks/attention/multiHeadAttention.c \
-            $(SRC_DIR)/blocks/layers/linearLayer.c \
+            $(SRC_DIR)/blocks/Layers/linearLayer.c \
             $(SRC_DIR)/math/normalization/normalization.c \
-            $(SRC_DIR)/blocks/feedforward/ffn.c \
+            $(SRC_DIR)/blocks/feedForward/ffn.c \
             $(SRC_DIR)/blocks/transformer/transformerBlock.c \
             $(SRC_DIR)/blocks/tokenizer/tokenizer.c \
-            $(SRC_DIR)/blocks/layers/embedding.c \
+            $(SRC_DIR)/blocks/Layers/embedding.c \
             $(SRC_DIR)/blocks/tokenizer/positionalEncoding.c \
-            $(SRC_DIR)/blocks/layers/outputProjection.c
+            $(SRC_DIR)/blocks/Layers/outputProjection.c
 
 .PHONY: run clean
 

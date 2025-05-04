@@ -1,10 +1,11 @@
 #include <math.h>
 #include "matrixUtils.h"
 #include "softmax.h"
-#include "attentionHead.h"
+#include "attentionhead.h"
 
+//One attention head calculations
 Matrix* attentionHead(Matrix* Q, Matrix* K, Matrix* V) {
-    // 1. Transpose K
+    // 1. Transpose Matrix K
     Matrix* K_T = transposeMatrix(K);
 
     // 2. Compute Q × Kᵀ

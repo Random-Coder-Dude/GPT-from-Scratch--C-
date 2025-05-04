@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "multiHeadAttention.h"
-#include "attentionHead.h"
+#include "attentionhead.h"
 
 MultiHeadAttention* createMultiHeadAttention(int input_dim, int num_heads) {
     MultiHeadAttention* mha = (MultiHeadAttention*)malloc(sizeof(MultiHeadAttention));

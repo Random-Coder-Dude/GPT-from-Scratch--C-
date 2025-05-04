@@ -30,8 +30,8 @@ int main() {
 
     // Model hyperparameters
     int vocab_size = 50;
-    int embedding_dim = 12288;
-    int hidden_dim = 12288;
+    int embedding_dim = 768;
+    int hidden_dim = 768;
     int num_heads = 96;
 
     // Embedding
@@ -125,7 +125,6 @@ int main() {
     freeMatrix(embedded);
     freeMatrix(pos);
     freeMatrix(transformer_output);
-    freeMatrix(logits);
     freeEmbedding(emb);
     freeTransformerBlock(block);
     freeOutputProjection(out_proj);

@@ -8,7 +8,7 @@
 #include "math/normalization/softmax.h"
 #include "blocks/attention/multiHeadAttention.h"
 #include "blocks/attention/attentionhead.h"
-#include "blocks/layers/linearLayer.h"
+#include "blocks/Layers/linearLayer.h"
 #include "math/normalization/normalization.h"
 #include "blocks/feedForward/ffn.h"
 #include "blocks/transformer/transformerBlock.h"
